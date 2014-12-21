@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		00A924A41A46309900047871 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A924A31A46309900047871 /* AppDelegate.swift */; };
-		00A924A61A46309900047871 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A924A51A46309900047871 /* FirstViewController.swift */; };
-		00A924A81A46309900047871 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A924A71A46309900047871 /* SecondViewController.swift */; };
+		00A924A61A46309900047871 /* BTLEPeripheralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A924A51A46309900047871 /* BTLEPeripheralViewController.swift */; };
+		00A924A81A46309900047871 /* BTLECentralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A924A71A46309900047871 /* BTLECentralViewController.swift */; };
 		00A924AB1A46309900047871 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00A924A91A46309900047871 /* Main.storyboard */; };
 		00A924AD1A46309900047871 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00A924AC1A46309900047871 /* Images.xcassets */; };
 		00A924B01A46309900047871 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00A924AE1A46309900047871 /* LaunchScreen.xib */; };
 		00A924BC1A46309900047871 /* BluetoothTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A924BB1A46309900047871 /* BluetoothTests.swift */; };
+		00A924C61A4630D700047871 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00A924C51A4630D700047871 /* CoreBluetooth.framework */; };
+		00A924C81A4631BE00047871 /* Definitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A924C71A4631BE00047871 /* Definitions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,14 +32,16 @@
 		00A9249E1A46309900047871 /* Bluetooth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bluetooth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00A924A21A46309900047871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00A924A31A46309900047871 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		00A924A51A46309900047871 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		00A924A71A46309900047871 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		00A924A51A46309900047871 /* BTLEPeripheralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLEPeripheralViewController.swift; sourceTree = "<group>"; };
+		00A924A71A46309900047871 /* BTLECentralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLECentralViewController.swift; sourceTree = "<group>"; };
 		00A924AA1A46309900047871 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		00A924AC1A46309900047871 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		00A924AF1A46309900047871 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		00A924B51A46309900047871 /* BluetoothTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BluetoothTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00A924BA1A46309900047871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00A924BB1A46309900047871 /* BluetoothTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothTests.swift; sourceTree = "<group>"; };
+		00A924C51A4630D700047871 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		00A924C71A4631BE00047871 /* Definitions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Definitions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00A924C61A4630D700047871 /* CoreBluetooth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +66,7 @@
 		00A924951A46309900047871 = {
 			isa = PBXGroup;
 			children = (
+				00A924C51A4630D700047871 /* CoreBluetooth.framework */,
 				00A924A01A46309900047871 /* Bluetooth */,
 				00A924B81A46309900047871 /* BluetoothTests */,
 				00A9249F1A46309900047871 /* Products */,
@@ -80,8 +86,9 @@
 			isa = PBXGroup;
 			children = (
 				00A924A31A46309900047871 /* AppDelegate.swift */,
-				00A924A51A46309900047871 /* FirstViewController.swift */,
-				00A924A71A46309900047871 /* SecondViewController.swift */,
+				00A924A71A46309900047871 /* BTLECentralViewController.swift */,
+				00A924A51A46309900047871 /* BTLEPeripheralViewController.swift */,
+				00A924C71A4631BE00047871 /* Definitions.swift */,
 				00A924A91A46309900047871 /* Main.storyboard */,
 				00A924AC1A46309900047871 /* Images.xcassets */,
 				00A924AE1A46309900047871 /* LaunchScreen.xib */,
@@ -215,9 +222,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00A924A81A46309900047871 /* SecondViewController.swift in Sources */,
+				00A924C81A4631BE00047871 /* Definitions.swift in Sources */,
+				00A924A81A46309900047871 /* BTLECentralViewController.swift in Sources */,
 				00A924A41A46309900047871 /* AppDelegate.swift in Sources */,
-				00A924A61A46309900047871 /* FirstViewController.swift in Sources */,
+				00A924A61A46309900047871 /* BTLEPeripheralViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +349,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Bluetooth/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -351,6 +360,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Bluetooth/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
