@@ -138,7 +138,7 @@ class BTLECentralViewController: UIViewController, CBCentralManagerDelegate, CBP
         // Discover the characteristic we want...
         
         // Loop through the newly filled peripheral.services array, just in case there's more than one.
-        for service in peripheral.services as [CBService] {
+        for service in peripheral.services as! [CBService] {
             peripheral.discoverCharacteristics([transferCharacteristicUUID], forService: service)
         }
     }
@@ -155,7 +155,7 @@ class BTLECentralViewController: UIViewController, CBCentralManagerDelegate, CBP
         }
 
         // Again, we loop through the array, just in case.
-        for characteristic in service.characteristics as [CBCharacteristic] {
+        for characteristic in service.characteristics as! [CBCharacteristic] {
             // And check if it's the right one
             if characteristic.UUID.isEqual(transferCharacteristicUUID) {
                 // If it is, subscribe to it
@@ -177,7 +177,7 @@ class BTLECentralViewController: UIViewController, CBCentralManagerDelegate, CBP
         if let stringFromData = NSString(data: characteristic.value, encoding: NSUTF8StringEncoding) {
             if stringFromData.isEqualToString("EOM") {
                 // We have, so show the data,
-                textView.text = NSString(data: data.copy() as NSData, encoding: NSUTF8StringEncoding)
+                textView.text = NSString(data: (data.copy() as! NSData) as NSData, encoding: NSUTF8StringEncoding) as! String
                 
                 // Cancel our subscription to the characteristic
                 peripheral.setNotifyValue(false, forCharacteristic: characteristic)
