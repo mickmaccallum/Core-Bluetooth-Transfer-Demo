@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>DB48D140-0089-4E57-AE0E-9242FC732FA0</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Bluetooth</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>2F5E15085546CC89A7619CF4938397FE6321ADD5</key>
+		<string>github.com:dowhilenet/Core-Bluetooth-Transfer-Demo.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Bluetooth.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>2F5E15085546CC89A7619CF4938397FE6321ADD5</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:dowhilenet/Core-Bluetooth-Transfer-Demo.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>2F5E15085546CC89A7619CF4938397FE6321ADD5</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2F5E15085546CC89A7619CF4938397FE6321ADD5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Core-Bluetooth-Transfer-Demo</string>
+		</dict>
+	</array>
+</dict>
+</plist>
