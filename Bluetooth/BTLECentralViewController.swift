@@ -246,20 +246,27 @@ class BTLECentralViewController: UIViewController, CBCentralManagerDelegate, CBP
         }
         
         // See if we are subscribed to a characteristic on the peripheral
-        if let services = discoveredPeripheral?.services as [CBService]? {
-            for service in services {
-                if let characteristics = service.characteristics as [CBCharacteristic]? {
-                    for characteristic in characteristics {
-                        if characteristic.UUID.isEqual(transferCharacteristicUUID) && characteristic.isNotifying {
-                            discoveredPeripheral?.setNotifyValue(false, forCharacteristic: characteristic)
-                            // And we're done.
-                            return
-                        }
-                    }
+        guard let services = discoveredPeripheral?.services else {
+            cancelPeripheralConnection()
+            return
+        }
+
+        for service in services {
+            guard let characteristics = service.characteristics else {
+                continue
+            }
+
+            for characteristic in characteristics {
+                if characteristic.UUID.isEqual(transferCharacteristicUUID) && characteristic.isNotifying {
+                    discoveredPeripheral?.setNotifyValue(false, forCharacteristic: characteristic)
+                    // And we're done.
+                    return
                 }
             }
         }
-        
+    }
+
+    private func cancelPeripheralConnection() {
         // If we've got this far, we're connected, but we're not subscribed, so we just disconnect
         centralManager?.cancelPeripheralConnection(discoveredPeripheral!)
     }

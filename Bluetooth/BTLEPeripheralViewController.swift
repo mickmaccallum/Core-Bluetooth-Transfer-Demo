@@ -60,7 +60,7 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
             value: nil,
             permissions: CBAttributePermissions.Readable
         )
-        
+
         // Then the service
         let transferService = CBMutableService(
             type: transferServiceUUID,
@@ -125,11 +125,11 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
         // We're not sending an EOM, so we're sending data
         
         // Is there any left to send?
-        if (sendDataIndex >= dataToSend?.length) {
+        guard sendDataIndex < dataToSend?.length else {
             // No data left.  Do nothing
             return
         }
-        
+
         // There's data left, so send until the callback fails, or we're done.
         var didSend = true
         
@@ -156,7 +156,7 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
                 forCharacteristic: transferCharacteristic!,
                 onSubscribedCentrals: nil
             )
-            
+
             // If it didn't work, drop out and wait for the callback
             if (!didSend) {
                 return
