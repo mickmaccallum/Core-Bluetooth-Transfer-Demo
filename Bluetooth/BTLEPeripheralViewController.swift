@@ -8,16 +8,29 @@
 
 import UIKit
 import CoreBluetooth
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegate, UITextViewDelegate {
-    @IBOutlet private weak var textView: UITextView!
-    @IBOutlet private weak var advertisingSwitch: UISwitch!
+    @IBOutlet fileprivate weak var textView: UITextView!
+    @IBOutlet fileprivate weak var advertisingSwitch: UISwitch!
     
-    private var peripheralManager: CBPeripheralManager?
-    private var transferCharacteristic: CBMutableCharacteristic?
+    fileprivate var peripheralManager: CBPeripheralManager?
+    fileprivate var transferCharacteristic: CBMutableCharacteristic?
 
-    private var dataToSend: NSData?
-    private var sendDataIndex: Int?
+    fileprivate var dataToSend: Data?
+    fileprivate var sendDataIndex: Int?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +40,7 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
         // Don't keep it going while we're not showing.
@@ -42,9 +55,9 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
     /** Required protocol method.  A full app should take care of all the possible states,
     *  but we're just waiting for  to know when the CBPeripheralManager is ready
     */
-    func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager) {
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         // Opt out from any other state
-        if (peripheral.state != CBPeripheralManagerState.PoweredOn) {
+        if (peripheral.state != .poweredOn) {
             return
         }
 
@@ -56,9 +69,9 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
         // Start with the CBMutableCharacteristic
         transferCharacteristic = CBMutableCharacteristic(
             type: transferCharacteristicUUID,
-            properties: CBCharacteristicProperties.Notify,
+            properties: CBCharacteristicProperties.notify,
             value: nil,
-            permissions: CBAttributePermissions.Readable
+            permissions: CBAttributePermissions.readable
         )
 
         // Then the service
@@ -71,16 +84,16 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
         transferService.characteristics = [transferCharacteristic!]
         
         // And add it to the peripheral manager
-        peripheralManager!.addService(transferService)
+        peripheralManager!.add(transferService)
     }
     
     /** Catch when someone subscribes to our characteristic, then start sending them data
     */
-    func peripheralManager(peripheral: CBPeripheralManager, central: CBCentral, didSubscribeToCharacteristic characteristic: CBCharacteristic) {
+    func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
         print("Central subscribed to characteristic")
         
         // Get the data
-        dataToSend = textView.text.dataUsingEncoding(NSUTF8StringEncoding)
+        dataToSend = textView.text.data(using: String.Encoding.utf8)
         
         // Reset the index
         sendDataIndex = 0;
@@ -91,21 +104,21 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
     
     /** Recognise when the central unsubscribes
     */
-    func peripheralManager(peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFromCharacteristic characteristic: CBCharacteristic) {
+    func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
         print("Central unsubscribed from characteristic")
     }
     
     // First up, check if we're meant to be sending an EOM
-    private var sendingEOM = false;
+    fileprivate var sendingEOM = false;
 
     /** Sends the next amount of data to the connected central
     */
-    private func sendData() {
+    fileprivate func sendData() {
         if sendingEOM {
             // send it
             let didSend = peripheralManager?.updateValue(
-                "EOM".dataUsingEncoding(NSUTF8StringEncoding)!,
-                forCharacteristic: transferCharacteristic!,
+                "EOM".data(using: String.Encoding.utf8)!,
+                for: transferCharacteristic!,
                 onSubscribedCentrals: nil
             )
 
@@ -125,7 +138,7 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
         // We're not sending an EOM, so we're sending data
         
         // Is there any left to send?
-        guard sendDataIndex < dataToSend?.length else {
+        guard sendDataIndex < dataToSend?.count else {
             // No data left.  Do nothing
             return
         }
@@ -137,7 +150,7 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
             // Make the next chunk
             
             // Work out how big it should be
-            var amountToSend = dataToSend!.length - sendDataIndex!;
+            var amountToSend = dataToSend!.count - sendDataIndex!;
             
             // Can't be longer than 20 bytes
             if (amountToSend > NOTIFY_MTU) {
@@ -145,15 +158,17 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
             }
             
             // Copy out the data we want
-            let chunk = NSData(
-                bytes: dataToSend!.bytes + sendDataIndex!,
-                length: amountToSend
-            )
+            let chunk = dataToSend!.withUnsafeBytes{(body: UnsafePointer<UInt8>) in
+                return Data(
+                    bytes: body + sendDataIndex!,
+                    count: amountToSend
+                )  
+            }
             
             // Send it
             didSend = peripheralManager!.updateValue(
-                chunk,
-                forCharacteristic: transferCharacteristic!,
+                chunk as Data,
+                for: transferCharacteristic!,
                 onSubscribedCentrals: nil
             )
 
@@ -163,8 +178,8 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
             }
             
             let stringFromData = NSString(
-                data: chunk,
-                encoding: NSUTF8StringEncoding
+                data: chunk as Data,
+                encoding: String.Encoding.utf8.rawValue
             )
 
             print("Sent: \(stringFromData)")
@@ -173,7 +188,7 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
             sendDataIndex! += amountToSend;
             
             // Was it the last one?
-            if (sendDataIndex! >= dataToSend!.length) {
+            if (sendDataIndex! >= dataToSend!.count) {
                 
                 // It was - send an EOM
                 
@@ -182,8 +197,8 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
                 
                 // Send it
                 let eomSent = peripheralManager!.updateValue(
-                    "EOM".dataUsingEncoding(NSUTF8StringEncoding)!,
-                    forCharacteristic: transferCharacteristic!,
+                    "EOM".data(using: String.Encoding.utf8)!,
+                    for: transferCharacteristic!,
                     onSubscribedCentrals: nil
                 )
                 
@@ -201,16 +216,16 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
     /** This callback comes in when the PeripheralManager is ready to send the next chunk of data.
     *  This is to ensure that packets will arrive in the order they are sent
     */
-    func peripheralManagerIsReadyToUpdateSubscribers(peripheral: CBPeripheralManager) {
+    func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
         // Start sending again
         sendData()
     }
     
     /** This is called when a change happens, so we know to stop advertising
     */
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         // If we're already advertising, stop
-        if (advertisingSwitch.on) {
+        if (advertisingSwitch.isOn) {
             advertisingSwitch.setOn(false, animated: true)
             peripheralManager?.stopAdvertising()
         }
@@ -218,8 +233,8 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
     
     /** Start advertising
     */
-    @IBAction func switchChanged(sender: UISwitch) {
-        if advertisingSwitch.on {
+    @IBAction func switchChanged(_ sender: UISwitch) {
+        if advertisingSwitch.isOn {
             // All we advertise is our service's UUID
             peripheralManager!.startAdvertising([
                 CBAdvertisementDataServiceUUIDsKey : [transferServiceUUID]
@@ -229,8 +244,8 @@ class BTLEPeripheralViewController: UIViewController, CBPeripheralManagerDelegat
         }
     }
     
-    func peripheralManagerDidStartAdvertising(peripheral: CBPeripheralManager, error: NSError?) {
-        print(error)
+    func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
+        print(error ?? "UNKNOWN ERROR")
     }
 }
 
